@@ -37,6 +37,30 @@
     [recordView setImage:[UIImage imageNamed:@"vago"]];
     [self.view addSubview:recordView];
     
+    //控制按钮
+    UIButton *go=[[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2-50, 20, 100, 20)];
+    [go setTitle:recordView.layer.speed == 1 ? @"pause":@"go"  forState:UIControlStateNormal];
+    [go setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [go addTarget:self action:@selector(Control:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:go];
+    [self addanima];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeAnm) name:@"run_back" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addanima) name:@"run_fore" object:nil];
+}
+
+- (void)didReceiveMemoryWarning{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(void)removeAnm
+{
+    [recordView.layer removeAllAnimations];
+}
+-(void)addanima
+{
+    recordView.layer.transform = CATransform3DMakeAffineTransform(CGAffineTransformMakeRotation(0));
     CABasicAnimation * runAnm = [CABasicAnimation animationWithKeyPath:@"transform"];
     //初始值 即0度
     [runAnm setFromValue:[NSValue valueWithCATransform3D:CATransform3DMakeAffineTransform(CGAffineTransformMakeRotation(0))]];
@@ -49,18 +73,8 @@
     //动画执行时间：2秒钟
     [runAnm setDuration:2];
     [recordView.layer addAnimation:runAnm forKey:nil];
-    //控制按钮
-    UIButton *go=[[UIButton alloc]initWithFrame:CGRectMake(SCREEN_WIDTH/2-50, 20, 100, 20)];
-    [go setTitle:recordView.layer.speed == 1 ? @"pause":@"go"  forState:UIControlStateNormal];
-    [go setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [go addTarget:self action:@selector(Control:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:go];
 }
 
-- (void)didReceiveMemoryWarning{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 /**
  *  响应按钮
